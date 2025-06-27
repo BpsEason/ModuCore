@@ -3,7 +3,7 @@
 > 企業級模組化後端框架，基於 Laravel 打造，專為高效能、可擴展的 API 系統設計，整合 RBAC、Octane、Docker 和 CI/CD。  
 > ⭐ 歡迎 Fork 我們的 GitHub 倉庫：[https://github.com/BpsEason/ModuCore.git](https://github.com/BpsEason/ModuCore.git)
 
-ModuCore 是一套模組化、高效能的 Laravel 後端框架，適合構建中大型 API 平台、SaaS 管理後台或多租戶系統，提供以下核心功能：
+ModuCore 是一套模組化、高效能的 Laravel 後端框架，適合構建中大型 API 平台、SaaS 管理後台或多租戶系統。本倉庫提供核心模組代碼（User、Payment、Sms、Rbac）及其生成工具，需自行初始化 Laravel 專案並整合。核心功能包括：
 
 - ⚙️ **模組化架構**：可插拔模組（User、Payment、Sms、Rbac），支援自定義 `make:module` 指令快速生成模組骨架。
 - 🔐 **RBAC 權限控管**：角色與權限分離，支援快取、API Key 驗證和速率限制，確保安全存取。
@@ -22,31 +22,26 @@ ModuCore 是一套模組化、高效能的 Laravel 後端框架，適合構建�
 
 ## 專案結構
 
-專案位於 `ModuCore` 目錄，核心後端程式碼在 `backend-laravel` 子目錄。以下是主要結構：
+本倉庫提供核心模組代碼，需整合到新建的 Laravel 專案中。整合後的專案結構如下：
 
 ```
-ModuCore/
-├── backend-laravel/              # Laravel 後端應用
-│   ├── app/
-│   │   ├── Console/Commands/     # 自定義 Artisan 命令（make:module）
-│   │   ├── Core/Models/          # RBAC 模型（Role、Permission、UserRole）
-│   │   ├── Http/Middleware/      # 中介層（API Key、權限檢查、速率限制）
-│   │   ├── Modules/              # 模組化結構
-│   │   │   ├── User/             # 使用者模組
-│   │   │   ├── Payment/          # 金流模組（ECPay）
-│   │   │   ├── Sms/              # 簡訊模組（Twilio）
-│   │   │   └── Rbac/             # 角色權限管理模組
-│   ├── config/                   # 配置檔案（modules.php、octane.php）
-│   ├── database/                 # 資料庫遷移和填充
-│   ├── tests/                    # 測試檔案
-│   ├── .env.example              # 環境變數範例
-│   ├── composer.json             # PHP 依賴配置
-│   └── Dockerfile                # Laravel 後端 Docker 映像
-├── docker/                       # Docker 配置（Nginx、Supervisor、Redis）
-├── .github/workflows/            # CI/CD 配置（deploy.yml）
-├── tests/                        # 壓力測試腳本（load_test.sh）
-├── docker-compose.yml            # 本地環境 Docker Compose
-└── docker-compose.prod.yml       # 生產環境 Docker Compose
+laravel-project/
+├── app/
+│   ├── Console/Commands/         # 自定義 Artisan 命令（make:module）
+│   ├── Core/Models/             # RBAC 模型（Role、Permission、UserRole）
+│   ├── Http/Middleware/         # 中介層（API Key、權限檢查、速率限制）
+│   ├── Modules/                 # 模組化結構
+│   │   ├── User/                # 使用者模組
+│   │   ├── Payment/             # 金流模組（ECPay）
+│   │   ├── Sms/                 # 簡訊模組（Twilio）
+│   │   └── Rbac/                # 角色權限管理模組
+├── config/                      # 配置檔案（modules.php、octane.php）
+├── database/                    # 資料庫遷移和填充
+├── tests/                       # 測試檔案
+├── .env.example                 # 環境變數範例
+├── composer.json                # PHP 依賴配置
+├── .github/workflows/           # CI/CD 配置（deploy.yml）
+└── docker/                      # Docker 配置（可選）
 ```
 
 ### 架構圖
@@ -74,66 +69,106 @@ graph TD
 
 ## 環境要求
 
-- **Docker**：Docker Desktop 或 Docker Engine。
-- **Docker Compose**：管理多容器服務。
+- **PHP**：8.2 或以上。
+- **Composer**：用於安裝 Laravel 和依賴。
+- **Docker**（可選）：用於容器化部署。
 - **Git**：版本控制與 CI/CD。
-- **網際網路連線**：拉取 Docker 映像和 Composer 依賴。
+- **網際網路連線**：拉取依賴和 Docker 映像（若使用）。
 
 ---
 
 ## 安裝步驟
 
-1. **克隆專案**：
+本倉庫僅包含核心模組代碼，需自行初始化 Laravel 專案並整合。以下是完整步驟：
+
+1. **初始化 Laravel 專案**：
+   使用 Composer 創建新的 Laravel 專案：
    ```bash
-   git clone https://github.com/BpsEason/ModuCore.git
-   cd ModuCore
+   composer create-project laravel/laravel laravel-project
+   cd laravel-project
    ```
 
-2. **配置環境變數**：
+2. **克隆 ModuCore 倉庫並整合**：
+   ```bash
+   git clone https://github.com/BpsEason/ModuCore.git
+   cp -r ModuCore/app ./
+   cp -r ModuCore/config ./
+   cp -r ModuCore/database ./
+   cp -r ModuCore/tests ./
+   cp -r ModuCore/.github ./
+   cp ModuCore/.env.example ./
+   ```
+   - 這會將核心模組代碼（`app/`、RBAC 模型、模組、中介層等）複製到新專案。
+   - 若倉庫包含 `docker/` 和 `docker-compose.yml`，可選擇複製：
+     ```bash
+     cp -r ModuCore/docker ./
+     cp ModuCore/docker-compose.yml ./
+     cp ModuCore/docker-compose.prod.yml ./
+     ```
+
+3. **更新 composer.json**：
+   將以下依賴加入 `composer.json` 的 `require` 部分：
+   ```json
+   {
+       "require": {
+           "laravel/octane": "^2.0",
+           "laravel/sanctum": "^3.0",
+           "l5-swagger": "^8.0",
+           "predis/predis": "^2.0",
+           "twilio/sdk": "^7.0"
+       }
+   }
+   ```
+   然後執行：
+   ```bash
+   composer update
+   ```
+
+4. **配置環境變數**：
    複製並編輯 `.env`：
    ```bash
-   cp backend-laravel/.env.example backend-laravel/.env
+   cp .env.example .env
    ```
    設置關鍵變數：
    - `APP_KEY`：生成命令：
      ```bash
-     docker-compose exec backend php artisan key:generate
+     php artisan key:generate
      ```
-   - `MODUCORE_API_KEY`：API 認證密鑰。
+   - `MODUCORE_API_KEY`：自定義 API 認證密鑰。
    - `ECPAY_*`：ECPay 金流憑證（`MERCHANT_ID`, `HASH_KEY`, `HASH_IV`）。
    - `TWILIO_*`：Twilio 簡訊憑證（`ACCOUNT_SID`, `AUTH_TOKEN`, `FROM_PHONE_NUMBER`）。
    - `DB_*`：資料庫配置（預設 MySQL）。
-   - `REDIS_*`：Redis 配置（快取、會話、隊列）。
-
-3. **建構並啟動 Docker 容器**：
-   ```bash
-   docker-compose up --build -d
-   ```
-
-4. **安裝 PHP 依賴**：
-   ```bash
-   docker-compose exec backend composer install --no-dev --optimize-autoloader
-   ```
+   - `REDIS_*`：Redis 配置（快取、會話、隊列，若使用）。
 
 5. **執行資料庫遷移和填充**：
    ```bash
-   docker-compose exec backend php artisan migrate --seed
+   php artisan migrate --seed
    ```
 
 6. **配置 Laravel Octane**：
+   安裝並啟用 Swoole：
    ```bash
-   docker-compose exec backend php artisan octane:install --server=swoole
+   php artisan octane:install --server=swoole
    ```
 
 7. **生成 Swagger/OpenAPI 文件**：
    ```bash
-   docker-compose exec backend php artisan vendor:publish --provider="L5Swagger\L5SwaggerServiceProvider"
-   docker-compose exec backend php artisan l5-swagger:generate
+   php artisan vendor:publish --provider="L5Swagger\L5SwaggerServiceProvider"
+   php artisan l5-swagger:generate
    ```
 
-8. **訪問應用程式**：
-   - 後端服務：`http://localhost:8000`
-   - Swagger API 文件：`http://localhost:8000/api/documentation`
+8. **啟動應用程式**：
+   - 使用 Laravel 內建伺服器：
+     ```bash
+     php artisan serve
+     ```
+   - 或使用 Docker（若複製了 Docker 配置）：
+     ```bash
+     docker-compose up --build -d
+     ```
+   - 訪問：
+     - 後端服務：`http://localhost:8000`
+     - Swagger API 文件：`http://localhost:8000/api/documentation`
 
 ---
 
@@ -156,12 +191,12 @@ graph TD
 ### 生成新模組
 使用自定義 Artisan 命令：
 ```bash
-docker-compose exec backend php artisan make:module YourNewModule --all
+php artisan make:module YourNewModule --all
 ```
-生成模組位於 `backend-laravel/app/Modules/YourNewModule`，包含控制器、服務、模型、路由等。
+生成模組位於 `app/Modules/YourNewModule`，包含控制器、服務、模型、路由等。
 
 ### 壓力測試
-執行壓力測試（需安裝 Apache Bench `ab`）：
+若倉庫包含 `tests/load_test.sh`，執行壓力測試（需安裝 Apache Bench `ab`）：
 ```bash
 cd tests
 ./load_test.sh
@@ -264,7 +299,7 @@ class MakeModule extends Command
 **註解說明**：
 - **目的**：提供 `make:module` 命令，允許開發者快速生成模組結構和組件。
 - **功能**：支援生成控制器、服務、模型、路由等，通過 `--all` 或單獨選項（`--controller`, `--service` 等）靈活控制。
-- **設計**：使用 stub 模板動態替換命名空間和類名，確保一致性；檢查模組是否存在，避免意外覆蓋。
+- **設計**：使用 stub 模板動態替換命名空間和類名，確保一致性；檢查模組是否存在，避免意外覆寫。
 - **使用**：執行 `php artisan make:module YourModule --all` 生成完整模組。
 
 ### 2. 簡訊模組控制器：SmsController.php
@@ -430,7 +465,7 @@ class TwilioSmsService implements SmsServiceContract
 **註解說明**：
 - **目的**：實現簡訊發送邏輯，與 Twilio SDK 整合。
 - **功能**：支援發送簡訊、查詢狀態、生成並發送驗證碼。
-- **設計**：實現 `SmsServiceContract` 合約，確保可替換其他簡訊服務（如 Nexmo）；使用 Redis 快取儲存驗證碼；包含錯誤處理和日誌記錄。
+- **設計**：實現 `SmsServiceContract` 合約，確保可替換其他簡訊服務；使用 Redis 快取儲存驗證碼；包含錯誤處理和日誌記錄。
 - **使用**：需在 `.env` 配置 Twilio 憑證（`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_PHONE_NUMBER`）。
 
 ---
@@ -438,24 +473,29 @@ class TwilioSmsService implements SmsServiceContract
 ## 部署
 
 ### 本地部署
-```bash
-docker-compose up -d
-```
+1. 使用 Laravel 內建伺服器：
+   ```bash
+   php artisan serve
+   ```
+2. 或使用 Docker（若複製了 Docker 配置）：
+   ```bash
+   docker-compose up --build -d
+   ```
 
 ### 生產部署
-1. 配置 `docker-compose.prod.yml` 和 `.env`（設置 `APP_ENV=production`, `APP_DEBUG=false`）。
-2. 部署：
+1. 配置 `.env`（設置 `APP_ENV=production`, `APP_DEBUG=false`）。
+2. 若使用 Docker，配置 `docker-compose.prod.yml` 並執行：
    ```bash
    docker-compose -f docker-compose.prod.yml up -d
    ```
 3. 執行遷移和優化：
    ```bash
-   docker-compose -f docker-compose.prod.yml exec backend php artisan migrate --force
-   docker-compose -f docker-compose.prod.yml exec backend php artisan optimize
+   php artisan migrate --force
+   php artisan optimize
    ```
 
 ### CI/CD
-使用 GitHub Actions（`.github/workflows/deploy.yml`）：
+若倉庫包含 `.github/workflows/deploy.yml`，支援：
 - 代碼檢查、測試、Docker 構建、推送至容器倉庫、部署至伺服器。
 - 配置 GitHub Secrets：`APP_KEY`, `DB_*`, `ECPAY_*`, `TWILIO_*`, `SSH_*`。
 
@@ -466,7 +506,7 @@ docker-compose up -d
 ### 新增模組
 1. 生成模組：
    ```bash
-   docker-compose exec backend php artisan make:module YourNewModule --all
+   php artisan make:module YourNewModule --all
    ```
 2. 註冊服務提供者（`config/modules.php`）。
 3. 更新遷移（`database/migrations`）和路由（`app/Modules/YourModule/routes.php`）。
@@ -487,18 +527,18 @@ docker-compose up -d
 
 ## 問題排查
 
-- **埠衝突**：
-  ```bash
-  ss -tuln | grep -E ':(8000|6379|3306)'
-  ```
 - **依賴安裝失敗**：
   ```bash
-  docker-compose exec backend composer update
+  composer update
   ```
 - **資料庫連線問題**：
   檢查 `.env` 的 `DB_*` 配置，確認 MySQL 運行：
   ```bash
   docker-compose ps
+  ```
+- **埠衝突**（若使用 Docker）：
+  ```bash
+  ss -tuln | grep -E ':(8000|6379|3306)'
   ```
 
 ---
