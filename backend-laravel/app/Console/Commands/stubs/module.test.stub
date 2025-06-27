@@ -1,0 +1,64 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
+
+class {{ ModuleName }}ModuleTest extends TestCase
+{
+    use RefreshDatabase; // 每次測試後重新整理資料庫
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // 執行所有遷移和填充資料
+        Artisan::call('migrate:fresh', ['--seed' => true]);
+    }
+
+    /**
+     * 測試取得所有 {{ ModuleNameLower }} 列表。
+     *
+     * @return void
+     */
+    public function test_get_{{ ModuleNameLower }}s_list()
+    {
+        $user = User::factory()->create(); // 創建一個測試用戶
+        $user->roles()->sync(\App\Core\Models\Role::where('name', 'admin')->first()->id); // 將其設置為管理員
+
+        $response = $this->actingAs($user, 'sanctum') // 使用 Sanctum 認證
+                         ->getJson('/api/{{ ModuleNameLower }}s');
+
+        $response->assertStatus(200)
+                 ->assertJsonStructure(['status', 'data']);
+    }
+
+    /**
+     * 測試建立新的 {{ ModuleNameLower }}。
+     *
+     * @return void
+     */
+    public function test_create_new_{{ ModuleNameLower }}()
+    {
+        $user = User::factory()->create();
+        $user->roles()->sync(\App\Core\Models\Role::where('name', 'admin')->first()->id);
+
+        $response = $this->actingAs($user, 'sanctum')
+                         ->postJson('/api/{{ ModuleNameLower }}s', [
+                             'name' => 'Test {{ ModuleName }}',
+                             'description' => 'A new test {{ ModuleNameLower }} item.',
+                             // ... 其他欄位
+                         ]);
+
+        $response->assertStatus(201)
+                 ->assertJson(['status' => 'success', 'message' => '{{ ModuleName }} 建立成功']);
+        $this->assertDatabaseHas('{{ ModuleNameLower }}s', ['name' => 'Test {{ ModuleName }}']);
+    }
+
+    // 您可以根據需要添加更多測試案例，例如：
+    // public function test_get_single_{{ ModuleNameLower }}()
+    // public function test_update_{{ ModuleNameLower }}()
+    // public function test_delete_{{ ModuleNameLower }}()
+}

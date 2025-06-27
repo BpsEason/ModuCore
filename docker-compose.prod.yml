@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  backend:
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - OCTANE_WORKERS=8 # Adjusted to 8 as per user's suggestion
+    restart: always
+
+  db:
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} # Use environment variable for root password
+    restart: always
+
+  redis:
+    restart: always
+
+  nginx:
+    restart: always

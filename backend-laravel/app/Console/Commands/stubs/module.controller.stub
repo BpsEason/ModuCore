@@ -1,0 +1,187 @@
+<?php
+
+namespace App\Modules\{{ ModuleName }}\Controllers;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Modules\{{ ModuleName }}\Services\{{ ModuleName }}Service;
+use Illuminate\Support\Facades\Cache; // 引入 Cache Facade
+
+/**
+ * Class {{ ModuleName }}Controller
+ * @package App\Modules\{{ ModuleName }}\Controllers
+ *
+ * @OA\Tag(
+ * name="{{ ModuleName }}管理",
+ * description="{{ ModuleName }} 相關的 API 操作"
+ * )
+ */
+class {{ ModuleName }}Controller extends Controller
+{
+    protected ${{ ModuleNameLower }}Service;
+
+    public function __construct({{ ModuleName }}Service ${{ ModuleNameLower }}Service)
+    {
+        $this->{{ ModuleNameLower }}Service = ${{ ModuleNameLower }}Service;
+    }
+
+    /**
+     * @OA\Get(
+     * path="/api/{{ ModuleNameLower }}s",
+     * summary="取得所有 {{ ModuleName }} 列表",
+     * tags={"{{ ModuleName }}管理"},
+     * security={{"ApiKeyAuth": {}}},
+     * @OA\Response(
+     * response=200,
+     * description="成功取得 {{ ModuleName }} 列表",
+     * @OA\JsonContent(type="array", @OA\Items(type="object"))
+     * )
+     * )
+     */
+    public function index(Request $request)
+    {
+        // 範例：使用 Redis 快取
+        $cacheKey = 'all_{{ ModuleNameLower }}s';
+        $data = Cache::remember($cacheKey, 60, function () { // 快取 60 秒
+            return $this->{{ ModuleNameLower }}Service->getAll();
+        });
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
+
+    /**
+     * @OA\Get(
+     * path="/api/{{ ModuleNameLower }}s/{id}",
+     * summary="根據 ID 取得單一 {{ ModuleName }}",
+     * tags={"{{ ModuleName }}管理"},
+     * security={{"ApiKeyAuth": {}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * description="{{ ModuleName }} ID",
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="成功取得 {{ ModuleName }} 資料",
+     * @OA\JsonContent(type="object")
+     * ),
+     * @OA\Response(response=404, description="找不到 {{ ModuleName }}")
+     * )
+     */
+    public function show(int $id)
+    {
+        $data = $this->{{ ModuleNameLower }}Service->getById($id);
+        if (!$data) {
+            return response()->json(['status' => 'error', 'message' => '找不到 {{ ModuleName }}'], 404);
+        }
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
+
+    /**
+     * @OA\Post(
+     * path="/api/{{ ModuleNameLower }}s",
+     * summary="建立新的 {{ ModuleName }}",
+     * tags={"{{ ModuleName }}管理"},
+     * security={{"ApiKeyAuth": {}}},
+     * @OA\RequestBody(
+     * required=true,
+     * @OA\JsonContent(
+     * type="object",
+     * @OA\Property(property="name", type="string", example="新{{ ModuleName }}名稱")
+     * )
+     * ),
+     * @OA\Response(
+     * response=201,
+     * description="{{ ModuleName }} 建立成功",
+     * @OA\JsonContent(type="object")
+     * ),
+     * @OA\Response(response=422, description="驗證失敗")
+     * )
+     */
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            // 定義更多驗證規則
+        ]);
+
+        $data = $this->{{ ModuleNameLower }}Service->create($validatedData);
+        Cache::forget('all_{{ ModuleNameLower }}s'); // 清除快取
+        return response()->json(['status' => 'success', 'message' => '{{ ModuleName }} 建立成功', 'data' => $data], 201);
+    }
+
+    /**
+     * @OA\Put(
+     * path="/api/{{ ModuleNameLower }}s/{id}",
+     * summary="更新 {{ ModuleName }}",
+     * tags={"{{ ModuleName }}管理"},
+     * security={{"ApiKeyAuth": {}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * description="{{ ModuleName }} ID",
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\RequestBody(
+     * required=true,
+     * @OA\JsonContent(
+     * type="object",
+     * @OA\Property(property="name", type="string", example="更新後名稱")
+     * )
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="{{ ModuleName }} 更新成功",
+     * @OA\JsonContent(type="object")
+     * ),
+     * @OA\Response(response=404, description="找不到 {{ ModuleName }} 或更新失敗"),
+     * @OA\Response(response=422, description="驗證失敗")
+     * )
+     */
+    public function update(Request $request, int $id)
+    {
+        $validatedData = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            // 定義更多驗證規則
+        ]);
+
+        $data = $this->{{ ModuleNameLower }}Service->update($id, $validatedData);
+        if (!$data) {
+            return response()->json(['status' => 'error', 'message' => '找不到 {{ ModuleName }} 或更新失敗'], 404);
+        }
+        Cache::forget('all_{{ ModuleNameLower }}s'); // 清除快取
+        return response()->json(['status' => 'success', 'message' => '{{ ModuleName }} 更新成功', 'data' => $data]);
+    }
+
+    /**
+     * @OA\Delete(
+     * path="/api/{{ ModuleNameLower }}s/{id}",
+     * summary="刪除 {{ ModuleName }}",
+     * tags={"{{ ModuleName }}管理"},
+     * security={{"ApiKeyAuth": {}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * description="{{ ModuleName }} ID",
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\Response(
+     * response=204,
+     * description="{{ ModuleName }} 刪除成功"
+     * ),
+     * @OA\Response(response=404, description="找不到 {{ ModuleName }} 或刪除失敗")
+     * )
+     */
+    public function destroy(int $id)
+    {
+        $deleted = $this->{{ ModuleNameLower }}Service->delete($id);
+        if (!$deleted) {
+            return response()->json(['status' => 'error', 'message' => '找不到 {{ ModuleName }} 或刪除失敗'], 404);
+        }
+        Cache::forget('all_{{ ModuleNameLower }}s'); // 清除快取
+        return response()->json(['status' => 'success', 'message' => '{{ ModuleName }} 刪除成功'], 204);
+    }
+}

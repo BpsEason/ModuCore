@@ -1,0 +1,36 @@
+<?php
+namespace App\Modules\{{ ModuleName }}\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use App\Modules\{{ ModuleName }}\Contracts\{{ ModuleName }}Interface;
+use App\Modules\{{ ModuleName }}\Services\{{ ModuleName }}Service;
+
+class {{ ModuleName }}ServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        // 模組特定的依賴注入
+        $this->app->bind(
+            {{ ModuleName }}Interface::class,
+            {{ ModuleName }}Service::class
+        );
+    }
+
+    public function boot(): void
+    {
+        // 模組特定的啟動邏輯
+        // 載入模組路由
+        $this->loadRoutesFrom(__DIR__ . '/../routes.php');
+
+        // 載入模組視圖 (如果有的話)
+        // $this->loadViewsFrom(__DIR__ . '/../Resources/views', '{{ ModuleNameLower }}');
+
+        // 載入模組遷移
+        // $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+        // 載入模組配置 (如果有的話)
+        // $this->mergeConfigFrom(
+        //     __DIR__ . '/../Config/config.php', '{{ ModuleNameLower }}'
+        // );
+    }
+}

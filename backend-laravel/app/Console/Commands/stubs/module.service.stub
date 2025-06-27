@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Modules\{{ ModuleName }}\Services;
+
+use App\Modules\{{ ModuleName }}\Models\{{ ModuleName }};
+use Illuminate\Support\Facades\Cache; // 引入 Cache Facade
+
+class {{ ModuleName }}Service
+{
+    /**
+     * 取得所有 {{ ModuleName }}。
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function getAll()
+    {
+        return {{ ModuleName }}::all();
+    }
+
+    /**
+     * 根據 ID 取得單一 {{ ModuleName }}。
+     *
+     * @param int $id
+     * @return {{ ModuleName }}|null
+     */
+    public function getById(int $id)
+    {
+        return {{ ModuleName }}::find($id);
+    }
+
+    /**
+     * 建立新的 {{ ModuleName }}。
+     *
+     * @param array $data
+     * @return {{ ModuleName }}
+     */
+    public function create(array $data)
+    {
+        $item = {{ ModuleName }}::create($data);
+        Cache::forget('all_{{ ModuleNameLower }}s'); // 清除相關快取
+        return $item;
+    }
+
+    /**
+     * 更新 {{ ModuleName }}。
+     *
+     * @param int $id
+     * @param array $data
+     * @return {{ ModuleName }}|null
+     */
+    public function update(int $id, array $data)
+    {
+        ${{ ModuleNameLower }} = {{ ModuleName }}::find($id);
+        if (!${{ ModuleNameLower }}) {
+            return null;
+        }
+        ${{ ModuleNameLower }}->update($data);
+        Cache::forget('all_{{ ModuleNameLower }}s'); // 清除相關快取
+        return ${{ ModuleNameLower }};
+    }
+
+    /**
+     * 刪除 {{ ModuleName }}。
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function delete(int $id): bool
+    {
+        ${{ ModuleNameLower }} = {{ ModuleName }}::find($id);
+        if (!${{ ModuleNameLower }}) {
+            return false;
+        }
+        $deleted = ${{ ModuleNameLower }}->delete();
+        if ($deleted) {
+            Cache::forget('all_{{ ModuleNameLower }}s'); // 清除相關快取
+        }
+        return $deleted;
+    }
+}

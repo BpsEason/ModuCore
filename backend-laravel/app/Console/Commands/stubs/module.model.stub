@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Modules\{{ ModuleName }}\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class {{ ModuleName }} extends Model
+{
+    use HasFactory;
+
+    /**
+     * 與模型相關的資料表。
+     *
+     * @var string
+     */
+    protected $table = '{{ ModuleNameLower }}s'; // 預設資料表名稱，可修改
+
+    /**
+     * 允許大量賦值的屬性。
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        // 'name', 'description', 'status' 等
+    ];
+
+    /**
+     * 對於陣列形式的序列化，應該隱藏的屬性。
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        // 'password',
+    ];
+
+    /**
+     * 應該轉換為不同資料型別的屬性。
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        // 'created_at' => 'datetime',
+    ];
+
+    // 定義與其他模型的關係
+    // public function user()
+    // {
+    //     return $this->belongsTo(\App\Models\User::class);
+    // }
+}

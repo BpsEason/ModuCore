@@ -1,0 +1,25 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Modules\{{ ModuleName }}\Controllers\{{ ModuleName }}Controller;
+use App\Http\Middleware\CheckPermission;
+use App\Http\Middleware\RateLimitMiddleware; // 引入速率限制中介層
+
+/*
+|--------------------------------------------------------------------------
+| {{ ModuleName }} Module API Routes
+|--------------------------------------------------------------------------
+|
+| 此檔案定義了 {{ ModuleName }} 模組的 API 路由。
+|
+*/
+
+Route::prefix('{{ ModuleNameLower }}s')
+    ->middleware(['auth:sanctum', RateLimitMiddleware::class . ':100,1']) # Changed to use middleware class name directly
+    ->group(function () {
+        Route::get('/', [{{ ModuleName }}Controller::class, 'index'])->middleware(CheckPermission::class . ':view-{{ ModuleNameLower }}s');
+        Route::get('/{id}', [{{ ModuleName }}Controller::class, 'show'])->middleware(CheckPermission::class . ':view-{{ ModuleNameLower }}-detail');
+        Route::post('/', [{{ ModuleName }}Controller::class, 'store'])->middleware(CheckPermission::class . ':create-{{ ModuleNameLower }}');
+        Route::put('/{id}', [{{ ModuleName }}Controller::class, 'update'])->middleware(CheckPermission::class . ':update-{{ ModuleNameLower }}');
+        Route::delete('/{id}', [{{ ModuleName }}Controller::class, 'destroy'])->middleware(CheckPermission::class . ':delete-{{ ModuleNameLower }}');
+});

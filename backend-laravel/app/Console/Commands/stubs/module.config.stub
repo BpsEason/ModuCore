@@ -1,0 +1,23 @@
+<?php
+
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | {{ ModuleName }} 模組配置
+    |--------------------------------------------------------------------------
+    |
+    | 此檔案包含 {{ ModuleName }} 模組的所有配置選項。
+    | 這些選項可以使用 config('{{ ModuleNameLower }}.key') 訪問。
+    |
+    */
+
+    'enabled' => env('{{ strtoupper(ModuleNameLower) }}_MODULE_ENABLED', true),
+
+    'settings' => [
+        'default_option' => 'value',
+        'api_key' => env('{{ strtoupper(ModuleNameLower) }}_API_KEY'),
+        // 其他模組特有的設定
+    ],
+
+    // 您可以根據需要添加更多配置區塊
+];
