@@ -2,7 +2,6 @@
 
 **Plug. Secure. Scale.**  
 企業級模組化後端框架，基於 Laravel 打造，專為高效能、可擴展的 API 系統設計。  
-⭐ 歡迎 Fork 我們的 GitHub 倉庫：[https://github.com/BpsEason/ModuCore.git](https://github.com/BpsEason/ModuCore.git)
 
 [![Laravel](https://img.shields.io/badge/Laravel-10.x-red)](https://laravel.com)
 [![PHP](https://img.shields.io/badge/PHP-8.2-blue)](https://www.php.net)
