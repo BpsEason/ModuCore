@@ -29,18 +29,19 @@ ModuCore 是一個模組化、高效能的 Laravel 後端框架，專為中大�
 
 當專案規模擴大時，Laravel 應用常面臨模組耦合、權限管理複雜和性能瓶頸等問題。ModuCore 透過模組化設計、RBAC 權限控管和高效能技術（Octane、Redis），讓開發者專注於業務邏輯，快速交付穩定的 API 系統。我們的目標是打造一個開箱即用的框架，兼顧靈活性和企業級穩定性，讓團隊高效開發並簡化部署流程。😎
 
----
+## ✨ 為什麼選擇 ModuCore？
 
-## 為何選擇 ModuCore？
+| 特性                       | 說明                                                                 |
+|----------------------------|----------------------------------------------------------------------|
+| 🧱 模組化架構               | 所有功能以模組方式封裝，可獨立開發、註冊與移除，支援 `make:module` 自動生成骨架。 |
+| 🔐 進階 RBAC 控制            | 角色與權限完全解耦，結合 Redis 快取、API Key 驗證與速率限制，確保系統安全。     |
+| ⚡ Laravel Octane 整合       | 使用 Swoole 提升吞吐量與低延遲，支援高併發 API 請求場景。                        |
+| 🚀 容器化部署               | 完整 Docker 化支援，含 db/redis/backend 多服務，便於跨環境部署與 CI/CD 串接。    |
+| 📄 自動化 API 文件產生       | 整合 Swagger/OpenAPI，自動生成端點與參數說明，便於開發與測試。                  |
+| 🔌 可插拔服務整合            | 金流（ECPay）、簡訊（Twilio）皆以策略模式封裝，輕鬆擴充或更換供應商。            |
+| 🧪 模組化測試覆蓋            | 每個模組皆內建 Feature 測試，支援自動化測試與資料填充。                        |
 
-| 特性 | 描述 | 優勢 |
-|------|------|------|
-| **模組化架構** | 可插拔模組，支援 `make:module` 快速生成 | 降低耦合，加速開發，易於維護 |
-| **RBAC 權限控管** | 角色與權限分離，支援快取和中介層 | 靈活安全，適合多租戶系統 |
-| **高效能** | 整合 Laravel Octane 和 Redis | 快速響應，處理大量請求 |
-| **自動化 CI/CD** | GitHub Actions 支援測試、構建、部署 | 縮短交付週期，確保品質 |
-| **Swagger 文件** | 自動生成 OpenAPI 文件 | 簡化 API 測試與團隊協作 |
-| **Docker 部署** | 支援容器化部署 | 環境一致，快速上線 |
+這區塊展現了 ModuCore 的工程實務力與可擴展性思維，適合分享給技術主管、面試官或開源社群。
 
 ---
 
@@ -69,37 +70,45 @@ laravel-project/
 ```
 
 ### 架構圖
-以下是 ModuCore 的模組化架構，展示客戶端如何透過 API 訪問模組，以及模組與資料庫和外部服務的互動（中文版，簡化設計）：
+以下是 ModuCore 的模組化架構，強調數據流與模組解耦：
 
 ```mermaid
-graph TD
-    A[客戶端] -->|發送 API 請求| B[Laravel API]
-    B -->|權限檢查| C[使用者模組]
-    B -->|權限檢查| D[金流模組]
-    B -->|權限檢查| E[簡訊模組]
-    B -->|權限檢查| F[權限模組]
-    C -->|儲存與查詢| K[MySQL 資料庫]
-    D -->|處理支付| L[綠界 ECPay]
-    E -->|發送簡訊| M[Twilio 服務]
-    F -->|儲存角色權限| K
-    B -->|快取與查詢| J[Redis<br>快取與隊列]
-    C -->|快取與查詢| J
-    D -->|快取與查詢| J
-    E -->|快取與查詢| J
-    F -->|快取與查詢| J
-    B -->|高效能運行| N[Octane<br>高效能環境]
-    K -->|資料存取| N
-    J -->|資料加速| N
-    L -->|外部服務| N
-    M -->|外部服務| N
+flowchart TD
+    subgraph Client
+        A[客戶端] 
+    end
+
+    subgraph Backend["Laravel 後端"]
+        B[API 網關]
+        B -->|驗證| AuthZ[🔐 RBAC<br>權限中介層]
+        B -->|調度| MUser[👤 使用者模組]
+        B -->|調度| MPayment[💵 金流模組]
+        B -->|調度| MSms[📨 簡訊模組]
+    end
+
+    subgraph Modules
+        MUser --> DB[(🗄️ MySQL)]
+        MPayment --> ECPay[綠界 ECPay]
+        MSms --> Twilio[Twilio 服務]
+        AuthZ --> Redis[(⚡ Redis)]
+        MUser --> Redis
+        MPayment --> Redis
+        MSms --> Redis
+    end
+
+    Backend --> Octane[🚀 Laravel Octane<br>高效能執行環境]
+    Octane --> DB
+    Octane --> Redis
+    Octane --> ECPay
+    Octane --> Twilio
+
+    A -->|API 請求| B
 ```
 
-**圖表說明**：
-- **客戶端**：發送 HTTP 請求（如 Postman 或瀏覽器）。
-- **Laravel API**：接收請求，透過中介層檢查權限。
-- **模組**：獨立處理業務（使用者管理、金流、簡訊、權限）。
-- **資料庫與服務**：MySQL 儲存資料，Redis 加速快取，綠界/Twilio 處理外部服務。
-- **Octane**：提升 API 響應速度。
+📌 **說明亮點**：
+- 模組化區塊以邏輯區分，便於擴充與維護。
+- 明確標註高效能執行路徑（Octane ⟶ Redis/MySQL）。
+- 整合外部服務（綠界 ECPay, Twilio）清楚標示與責任邊界。
 
 ---
 
