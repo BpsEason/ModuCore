@@ -10,8 +10,6 @@
 
 **技術標籤**：`Laravel` `Octane` `Docker` `RBAC` `Swagger` `CI/CD`
 
-[ModuCore Logo]
-
 ModuCore 是一個模組化、高效能的 Laravel 後端框架，專為中大型 API 平台、SaaS 後台或多租戶系統設計。本倉庫提供核心模組代碼（User、Payment、Sms、Rbac），需整合至新建的 Laravel 專案，幫助開發者快速構建可擴展的 API 系統。核心功能包括：
 
 - ⚙️ **模組化架構**：獨立模組（User、Payment、Sms、Rbac），支援 `make:module` 指令快速生成。
