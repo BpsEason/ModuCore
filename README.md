@@ -1,28 +1,54 @@
 # ModuCore
 
-> 企業級模組化後端框架，基於 Laravel 打造，專為高效能、可擴展的 API 系統設計，整合 RBAC、Octane、Docker 和 CI/CD。  
-> ⭐ 歡迎 Fork 我們的 GitHub 倉庫：[https://github.com/BpsEason/ModuCore.git](https://github.com/BpsEason/ModuCore.git)
+**Plug. Secure. Scale.**  
+企業級模組化後端框架，基於 Laravel 打造，專為高效能、可擴展的 API 系統設計。  
+⭐ 歡迎 Fork 我們的 GitHub 倉庫：[https://github.com/BpsEason/ModuCore.git](https://github.com/BpsEason/ModuCore.git)
 
-ModuCore 是一套模組化、高效能的 Laravel 後端框架，適合構建中大型 API 平台、SaaS 管理後台或多租戶系統。本倉庫提供核心模組代碼（User、Payment、Sms、Rbac）及其生成工具，需自行初始化 Laravel 專案並整合。核心功能包括：
+[![Laravel](https://img.shields.io/badge/Laravel-10.x-red)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2-blue)](https://www.php.net)
+[![Build Status](https://img.shields.io/github/workflow/status/BpsEason/ModuCore/Deploy?label=Build)](https://github.com/BpsEason/ModuCore/actions)
 
-- ⚙️ **模組化架構**：可插拔模組（User、Payment、Sms、Rbac），支援自定義 `make:module` 指令快速生成模組骨架。
-- 🔐 **RBAC 權限控管**：角色與權限分離，支援快取、API Key 驗證和速率限制，確保安全存取。
-- 🚀 **高效能部署**：整合 Laravel Octane（Swoole）、Redis 快取/隊列，實現高吞吐量 API。
-- 📦 **CI/CD 自動化**：透過 GitHub Actions 實現代碼檢查、測試、Docker 構建和部署。
-- 📘 **完整 API 文件**：自動生成 Swagger/OpenAPI 文件，簡化開發與測試。
+**技術標籤**：`Laravel` `Octane` `Docker` `RBAC` `Swagger` `CI/CD`
+
+[ModuCore Logo]
+
+ModuCore 是一個模組化、高效能的 Laravel 後端框架，專為中大型 API 平台、SaaS 後台或多租戶系統設計。本倉庫提供核心模組代碼（User、Payment、Sms、Rbac），需整合至新建的 Laravel 專案，幫助開發者快速構建可擴展的 API 系統。核心功能包括：
+
+- ⚙️ **模組化架構**：獨立模組（User、Payment、Sms、Rbac），支援 `make:module` 指令快速生成。
+- 🔐 **RBAC 權限控管**：角色與權限分離，確保安全存取。
+- 🚀 **高效能**：整合 Laravel Octane 和 Redis，應對大量請求。
+- 📦 **CI/CD 自動化**：GitHub Actions 實現測試、構建和部署。
+- 📘 **API 文件**：自動生成 Swagger/OpenAPI 文件，簡化測試與協作。
 
 🧱 **適用情境**：
-- 中大型企業 API 平台架構起始點。
-- 需要模組化與 RBAC 控制的 Laravel 開發團隊。
-- 快速搭建 SaaS 後台或多租戶系統的底層框架。
+- 快速搭建企業級 API 或 SaaS 平台。
+- 需要模組化和權限管理的 Laravel 團隊。
+- 追求高效能和自動化部署的開發者。
 
-👉 快速開始、模組設計範例、部署指引詳見下方內容！
+---
+
+## Why ModuCore?
+
+當專案規模擴大時，Laravel 應用常面臨模組耦合、權限管理複雜和性能瓶頸等問題。ModuCore 透過模組化設計、RBAC 權限控管和高效能技術（Octane、Redis），讓開發者專注於業務邏輯，快速交付穩定的 API 系統。我們的目標是打造一個開箱即用的框架，兼顧靈活性和企業級穩定性，讓團隊高效開發並簡化部署流程。😎
+
+---
+
+## 為何選擇 ModuCore？
+
+| 特性 | 描述 | 優勢 |
+|------|------|------|
+| **模組化架構** | 可插拔模組，支援 `make:module` 快速生成 | 降低耦合，加速開發，易於維護 |
+| **RBAC 權限控管** | 角色與權限分離，支援快取和中介層 | 靈活安全，適合多租戶系統 |
+| **高效能** | 整合 Laravel Octane 和 Redis | 快速響應，處理大量請求 |
+| **自動化 CI/CD** | GitHub Actions 支援測試、構建、部署 | 縮短交付週期，確保品質 |
+| **Swagger 文件** | 自動生成 OpenAPI 文件 | 簡化 API 測試與團隊協作 |
+| **Docker 部署** | 支援容器化部署 | 環境一致，快速上線 |
 
 ---
 
 ## 專案結構
 
-本倉庫提供核心模組代碼，需整合到新建的 Laravel 專案中。整合後的專案結構如下：
+本倉庫提供核心模組代碼，需整合到新建的 Laravel 專案。整合後的結構如下：
 
 ```
 laravel-project/
@@ -45,25 +71,29 @@ laravel-project/
 ```
 
 ### 架構圖
-以下是 ModuCore 的模組化架構與服務互動示意圖，使用 Mermaid 繪製：
+以下是 ModuCore 的模組化架構，展示客戶端如何透過 API 訪問模組，以及模組與資料庫和外部服務的互動（中文版，簡化設計）：
 
 ```mermaid
 graph TD
-    A[Client] -->|HTTP| B[Laravel API]
-    B -->|Routing| C[User Module]
-    B -->|Routing| D[Payment Module]
-    B -->|Routing| E[Sms Module]
-    B -->|Routing| F[Rbac Module]
-    B -->|Middleware| G[API Key Middleware]
-    B -->|Middleware| H[CheckPermission Middleware]
-    B -->|Middleware| I[RateLimit Middleware]
-    B -->|Cache/Queue| J[Redis]
-    B -->|Database| K[MySQL]
-    D -->|SDK| L[ECPay Service]
-    E -->|SDK| M[Twilio Service]
-    B -->|Swoole| N[Laravel Octane]
-    F -->|Permission Check| H
+    A[客戶端] -->|發送 API 請求| B[Laravel API]
+    B -->|權限檢查| C[使用者模組]
+    B -->|權限檢查| D[金流模組]
+    B -->|權限檢查| E[簡訊模組]
+    B -->|權限檢查| F[權限模組]
+    C -->|儲存資料| K[MySQL 資料庫]
+    D -->|處理支付| L[綠界 ECPay]
+    E -->|發送簡訊| M[Twilio 服務]
+    F -->|儲存角色權限| K
+    B -->|快取與隊列| J[Redis]
+    B -->|高效能運行| N[Octane]
 ```
+
+**圖表說明**：
+- **客戶端**：發送 HTTP 請求（如 Postman 或瀏覽器）。
+- **Laravel API**：接收請求，透過中介層檢查權限。
+- **模組**：獨立處理業務（使用者管理、金流、簡訊、權限）。
+- **資料庫與服務**：MySQL 儲存資料，Redis 加速快取，綠界/Twilio 處理外部服務。
+- **Octane**：提升 API 響應速度。
 
 ---
 
@@ -79,16 +109,15 @@ graph TD
 
 ## 安裝步驟
 
-本倉庫僅包含核心模組代碼，需自行初始化 Laravel 專案並整合。以下是完整步驟：
+本倉庫僅包含核心模組代碼，需整合至新建的 Laravel 專案。以下是快速上手步驟：
 
 1. **初始化 Laravel 專案**：
-   使用 Composer 創建新的 Laravel 專案：
    ```bash
    composer create-project laravel/laravel laravel-project
    cd laravel-project
    ```
 
-2. **克隆 ModuCore 倉庫並整合**：
+2. **克隆 ModuCore 並整合**：
    ```bash
    git clone https://github.com/BpsEason/ModuCore.git
    cp -r ModuCore/app ./
@@ -98,8 +127,8 @@ graph TD
    cp -r ModuCore/.github ./
    cp ModuCore/.env.example ./
    ```
-   - 這會將核心模組代碼（`app/`、RBAC 模型、模組、中介層等）複製到新專案。
-   - 若倉庫包含 `docker/` 和 `docker-compose.yml`，可選擇複製：
+   - 複製核心代碼（模組、RBAC、中介層等）。
+   - 若包含 `docker/`，可選擇複製：
      ```bash
      cp -r ModuCore/docker ./
      cp ModuCore/docker-compose.yml ./
@@ -107,7 +136,7 @@ graph TD
      ```
 
 3. **更新 composer.json**：
-   將以下依賴加入 `composer.json` 的 `require` 部分：
+   將以下依賴加入 `composer.json` 的 `require`：
    ```json
    {
        "require": {
@@ -119,26 +148,22 @@ graph TD
        }
    }
    ```
-   然後執行：
+   執行：
    ```bash
    composer update
    ```
 
 4. **配置環境變數**：
-   複製並編輯 `.env`：
    ```bash
    cp .env.example .env
    ```
    設置關鍵變數：
-   - `APP_KEY`：生成命令：
-     ```bash
-     php artisan key:generate
-     ```
-   - `MODUCORE_API_KEY`：自定義 API 認證密鑰。
-   - `ECPAY_*`：ECPay 金流憑證（`MERCHANT_ID`, `HASH_KEY`, `HASH_IV`）。
-   - `TWILIO_*`：Twilio 簡訊憑證（`ACCOUNT_SID`, `AUTH_TOKEN`, `FROM_PHONE_NUMBER`）。
+   - `APP_KEY`：執行 `php artisan key:generate`。
+   - `MODUCORE_API_KEY`：API 認證密鑰。
+   - `ECPAY_*`：ECPay 憑證（`MERCHANT_ID`, `HASH_KEY`, `HASH_IV`）。
+   - `TWILIO_*`：Twilio 憑證（`ACCOUNT_SID`, `AUTH_TOKEN`, `FROM_PHONE_NUMBER`）。
    - `DB_*`：資料庫配置（預設 MySQL）。
-   - `REDIS_*`：Redis 配置（快取、會話、隊列，若使用）。
+   - `REDIS_*`：Redis 配置（若使用）。
 
 5. **執行資料庫遷移和填充**：
    ```bash
@@ -146,12 +171,11 @@ graph TD
    ```
 
 6. **配置 Laravel Octane**：
-   安裝並啟用 Swoole：
    ```bash
    php artisan octane:install --server=swoole
    ```
 
-7. **生成 Swagger/OpenAPI 文件**：
+7. **生成 Swagger 文件**：
    ```bash
    php artisan vendor:publish --provider="L5Swagger\L5SwaggerServiceProvider"
    php artisan l5-swagger:generate
@@ -175,28 +199,46 @@ graph TD
 ## 使用方式
 
 ### API 端點
-所有 API 端點均受保護，需提供：
-- **API Key**：請求頭 `X-API-KEY`（設置於 `.env` 的 `MODUCORE_API_KEY`）。
+所有 API 需提供：
+- **API Key**：請求頭 `X-API-KEY`（來自 `.env` 的 `MODUCORE_API_KEY`）。
 - **Sanctum 認證**：部分端點需 Bearer Token（透過 `/api/auth/login` 獲取）。
 - **權限檢查**：RBAC 控制存取（需分配角色/權限）。
 
-主要模組端點：
+主要端點：
 - **User**：`/api/users`（CRUD 操作）
 - **Payment**：`/api/payments`（ECPay 金流）
 - **Sms**：`/api/sms/send`, `/api/sms/{externalId}/status`, `/api/sms/send-verification`（Twilio 簡訊）
 - **Rbac**：`/api/rbac/roles`, `/api/rbac/permissions`（角色與權限管理）
 
-詳細 API 文件：`http://localhost:8000/api/documentation`
+詳細文件：`http://localhost:8000/api/documentation`
+
+### 快速 API 測試
+使用 Postman 測試簡訊發送：
+```json
+{
+    "url": "http://localhost:8000/api/sms/send",
+    "method": "POST",
+    "headers": {
+        "X-API-KEY": "{{MODUCORE_API_KEY}}",
+        "Authorization": "Bearer {{YOUR_TOKEN}}",
+        "Accept": "application/json"
+    },
+    "body": {
+        "phone_number": "+886912345678",
+        "message": "Hello, this is a test SMS!"
+    }
+}
+```
+[Swagger UI 截圖：展示 API 文件介面]
 
 ### 生成新模組
-使用自定義 Artisan 命令：
 ```bash
 php artisan make:module YourNewModule --all
 ```
 生成模組位於 `app/Modules/YourNewModule`，包含控制器、服務、模型、路由等。
 
 ### 壓力測試
-若倉庫包含 `tests/load_test.sh`，執行壓力測試（需安裝 Apache Bench `ab`）：
+若包含 `tests/load_test.sh`，執行：
 ```bash
 cd tests
 ./load_test.sh
@@ -206,10 +248,10 @@ cd tests
 
 ## 模組化設計範例
 
-以下展示 ModuCore 的關鍵代碼，包含詳細註解，幫助開發者理解模組化實現。
+以下展示關鍵代碼，包含詳細註解，幫助開發者快速上手。
 
 ### 1. 自定義 Artisan 命令：MakeModule.php
-用於生成模組骨架，支援控制器、服務、模型等組件。
+用於生成模組骨架。
 
 ```php
 <?php
@@ -297,13 +339,13 @@ class MakeModule extends Command
 ```
 
 **註解說明**：
-- **目的**：提供 `make:module` 命令，允許開發者快速生成模組結構和組件。
-- **功能**：支援生成控制器、服務、模型、路由等，通過 `--all` 或單獨選項（`--controller`, `--service` 等）靈活控制。
-- **設計**：使用 stub 模板動態替換命名空間和類名，確保一致性；檢查模組是否存在，避免意外覆寫。
-- **使用**：執行 `php artisan make:module YourModule --all` 生成完整模組。
+- **目的**：提供 `make:module` 命令，快速生成模組結構。
+- **功能**：支援生成控制器、服務、模型、路由等，靈活控制。
+- **設計**：使用 stub 模板動態替換命名空間；檢查模組存在，避免覆寫。
+- **使用**：執行 `php artisan make:module YourModule --all`。
 
 ### 2. 簡訊模組控制器：SmsController.php
-展示 Sms 模組的 API 處理邏輯。
+處理簡訊相關 API。
 
 ```php
 <?php
@@ -374,13 +416,13 @@ class SmsController extends Controller
 ```
 
 **註解說明**：
-- **目的**：處理簡訊相關 API 請求（發送、查詢狀態、驗證碼）。
-- **功能**：實現發送簡訊（`/api/sms/send`）、查詢狀態（`/api/sms/{externalId}/status`）、發送驗證碼（`/api/sms/send-verification`）。
-- **設計**：使用依賴注入（`SmsService`）分離業務邏輯；整合快取（Redis）優化狀態查詢；包含請求驗證和錯誤處理。
-- **使用**：需搭配 `TwilioSmsService` 實現具體簡訊發送邏輯。
+- **目的**：處理簡訊 API（發送、狀態查詢、驗證碼）。
+- **功能**：實現 `/api/sms/send`、`/api/sms/{externalId}/status`、`/api/sms/send-verification`。
+- **設計**：依賴注入分離邏輯；使用 Redis 快取；包含驗證和錯誤處理。
+- **使用**：需搭配 `TwilioSmsService`。
 
 ### 3. 簡訊服務：TwilioSmsService.php
-實現 Twilio 簡訊發送邏輯。
+實現 Twilio 簡訊發送。
 
 ```php
 <?php
@@ -421,7 +463,7 @@ class TwilioSmsService implements SmsServiceContract
                 'status' => $response->status
             ];
         } catch (\Exception $e) {
-            // 記錄錯誤並返回 false
+            // 記錄錯誤並返回空陣列
             \Log::error("SMS sending failed: {$e->getMessage()}");
             return [];
         }
@@ -463,10 +505,84 @@ class TwilioSmsService implements SmsServiceContract
 ```
 
 **註解說明**：
-- **目的**：實現簡訊發送邏輯，與 Twilio SDK 整合。
-- **功能**：支援發送簡訊、查詢狀態、生成並發送驗證碼。
-- **設計**：實現 `SmsServiceContract` 合約，確保可替換其他簡訊服務；使用 Redis 快取儲存驗證碼；包含錯誤處理和日誌記錄。
-- **使用**：需在 `.env` 配置 Twilio 憑證（`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_PHONE_NUMBER`）。
+- **目的**：實現 Twilio 簡訊發送邏輯。
+- **功能**：支援發送簡訊、查詢狀態、生成驗證碼。
+- **設計**：實現 `SmsServiceContract`，支援替換其他服務；使用 Redis 快取；包含錯誤處理。
+- **使用**：需配置 `.env` 的 Twilio 憑證。
+
+---
+
+## 常見問題 (FAQ)
+
+### 1. ModuCore 是做什麼的？它解決了什麼問題？
+ModuCore 是一個基於 Laravel 的模組化後端框架，專為中大型 API 平台或 SaaS 服務設計。它解決以下問題：
+- **專案龐大難維護**：模組化設計讓功能獨立（如 User、Payment），易於管理和擴展。
+- **權限管理複雜**：內建 RBAC，輕鬆控制誰能做什麼。
+- **效能要求高**：整合 Octane 和 Redis，快速處理大量請求。
+- **重複工作多**：提供 `make:module` 命令，快速生成模組骨架。
+- **部署麻煩**：支援 Docker 和 CI/CD，確保環境一致和自動化部署。
+
+### 2. 模組化架構如何實現？有哪些核心模組？
+ModuCore 將功能拆分成獨立模組，每個模組有自己的控制器、服務、模型和路由，位於 `app/Modules/`。實現方式：
+- **目錄結構**：每個模組（如 User）有獨立子目錄，包含 `Controllers`、`Services` 等。
+- **服務提供者**：模組透過 `Providers` 註冊服務和路由。
+- **合約設計**：使用 `Contracts` 定義介面，方便替換底層服務（如 Twilio 換其他簡訊服務）。
+**核心模組**：
+- **User**：使用者帳號管理（CRUD）。
+- **Payment**：金流功能（以 ECPay 為例）。
+- **Sms**：簡訊通知和驗證碼（以 Twilio 為例）。
+- **Rbac**：角色與權限管理，系統安全核心。
+
+### 3. RBAC 權限控管如何運作？
+RBAC（角色權限控制）讓你靈活管理使用者權限：
+- **核心概念**：使用者 → 角色 → 權限。例如，使用者 A 是「管理員」，擁有「查看使用者」權限。
+- **運作流程**：
+  1. 定義權限（`view-users`、`send-sms`），存於 `permissions` 表。
+  2. 定義角色（`admin`、`editor`），存於 `roles` 表。
+  3. 角色分配權限，儲存在 `role_permissions` 表。
+  4. 使用者分配角色，儲存在 `user_roles` 表。
+  5. API 請求時，`CheckPermission` 中介層檢查權限，通過 Redis 快取加速。
+- **優勢**：靈活、易維護，適合複雜系統。
+
+### 4. Laravel Octane 如何提升效能？為什麼選它？
+Octane 讓 Laravel 應用常駐記憶體，減少每次請求的啟動開銷：
+- **原理**：傳統 PHP 每次請求需重新載入框架；Octane 使用 Swoole 讓應用保持運行，直接處理請求。
+- **優勢**：大幅提升 API 響應速度和吞吐量，適合高流量場景。
+- **為何選擇**：與 Laravel 無縫整合，簡單配置，支援現代 PHP 高效能特性，未來可應對流量增長。
+
+### 5. CI/CD 自動化如何實現？用了哪些工具？
+我們使用 GitHub Actions 實現 CI/CD，自動化測試、構建和部署：
+- **流程**（`.github/workflows/deploy.yml`）：
+  1. 推送代碼到 `main` 或 `develop` 觸發。
+  2. 檢查代碼、設置環境（從 GitHub Secrets 讀取 `APP_KEY` 等）。
+  3. 安裝依賴（`composer install`），使用快取加速。
+  4. 運行測試（`php artisan test`）。
+  5. 構建 Docker 映像，推送至容器倉庫。
+  6. 遠端部署，執行遷移（`php artisan migrate --force`）和優化（`php artisan optimize`）。
+- **工具**：GitHub Actions（免費、整合度高）、Docker（環境一致）、Composer（依賴管理）。
+
+### 6. 除了 Laravel，還用了哪些技術？為什麼？
+- **PHP 8.2+**：性能更好，支援新語法。
+- **MySQL**：穩定、成熟的資料庫，適合大多數場景。
+- **Redis**：高速快取和隊列，加速資料存取。
+- **Swoole**：Octane 底層，實現高效能 PHP。
+- **Docker**：確保環境一致，簡化部署。
+- **L5-Swagger**：自動生成 API 文件，方便協作。
+- **Apache Bench**：簡單高效的壓力測試工具。
+這些技術讓 ModuCore 高效、穩定、易於開發和部署。
+
+### 7. 開發中有哪些挑戰？如何解決？
+- **模組化設計**：挑戰是確保模組解耦且易載入。解決：設計服務提供者和 `make:module` 命令，使用 stub 自動生成標準結構。
+- **Octane 優化**：記憶體管理和上下文污染問題。解決：遵循 Octane 文檔，避免靜態變數，調整配置並使用 Redis 快取。
+- **RBAC 效能**：權限查詢頻繁影響性能。解決：用 Redis 快取權限映射，減少資料庫查詢。
+- **CI/CD 穩定性**：環境不一致和測試失敗。解決：嚴格定義 Dockerfile，加入測試和快取步驟，自動化部署流程。
+
+### 8. ModuCore 對職業發展的影響？
+- **技術提升**：掌握模組化設計、高效能後端（Octane、Redis）、RBAC 和 CI/CD。
+- **架構思維**：從單一功能到整體系統設計，考慮擴展性和維護性。
+- **團隊協作**：學會用 Docker 和 GitHub Actions 確保一致性和高效協作。
+- **問題解決**：從記憶體洩漏到部署錯誤，培養了分析和解決問題的能力。
+ModuCore 讓我成為更有價值的後端開發者，準備好應對企業級挑戰！
 
 ---
 
@@ -483,8 +599,8 @@ class TwilioSmsService implements SmsServiceContract
    ```
 
 ### 生產部署
-1. 配置 `.env`（設置 `APP_ENV=production`, `APP_DEBUG=false`）。
-2. 若使用 Docker，配置 `docker-compose.prod.yml` 並執行：
+1. 配置 `.env`（`APP_ENV=production`, `APP_DEBUG=false`）。
+2. 若使用 Docker：
    ```bash
    docker-compose -f docker-compose.prod.yml up -d
    ```
@@ -495,8 +611,8 @@ class TwilioSmsService implements SmsServiceContract
    ```
 
 ### CI/CD
-若倉庫包含 `.github/workflows/deploy.yml`，支援：
-- 代碼檢查、測試、Docker 構建、推送至容器倉庫、部署至伺服器。
+若包含 `.github/workflows/deploy.yml`，支援：
+- 自動測試、構建、部署。
 - 配置 GitHub Secrets：`APP_KEY`, `DB_*`, `ECPAY_*`, `TWILIO_*`, `SSH_*`。
 
 ---
@@ -525,6 +641,16 @@ class TwilioSmsService implements SmsServiceContract
 
 ---
 
+## Roadmap
+
+ModuCore 未來計劃：
+- **v1.1**（Q3 2025）：支援多租戶，實現租戶隔離。
+- **v1.2**（Q4 2025）：整合 Prometheus 和 Laravel Telescope，提升監控。
+- **v1.3**（Q1 2026）：支援 WebSocket 和非同步任務。
+- **v2.0**（2026）：支援 GraphQL 和微服務拆分。
+
+---
+
 ## 問題排查
 
 - **依賴安裝失敗**：
@@ -545,7 +671,7 @@ class TwilioSmsService implements SmsServiceContract
 
 ## 貢獻
 
-歡迎 Fork 我們的倉庫並貢獻代碼！[https://github.com/BpsEason/ModuCore.git](https://github.com/BpsEason/ModuCore.git)
+歡迎 Fork 並貢獻代碼！[https://github.com/BpsEason/ModuCore.git](https://github.com/BpsEason/ModuCore.git)
 1. Fork 倉庫。
 2. 創建分支：`git checkout -b feature/your-feature`。
 3. 提交更改：`git commit -m "Add your feature"`。
