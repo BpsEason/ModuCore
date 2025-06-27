@@ -78,7 +78,7 @@ flowchart TD
 
     subgraph Backend["Laravel 後端"]
         B[API 網關]
-        B -->|驗證| AuthZ[🔐 RBAC<br>權限中介層]
+        B -->|驗證| AuthZ[🔐 RBAC 權限中介層]
         B -->|調度| MUser[👤 使用者模組]
         B -->|調度| MPayment[💵 金流模組]
         B -->|調度| MSms[📨 簡訊模組]
@@ -94,7 +94,7 @@ flowchart TD
         MSms --> Redis
     end
 
-    Backend --> Octane[🚀 Laravel Octane<br>高效能執行環境]
+    Backend --> Octane[🚀 Laravel Octane]
     Octane --> DB
     Octane --> Redis
     Octane --> ECPay
